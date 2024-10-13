@@ -1,0 +1,365 @@
+ubuntu@tryit:~$ sudo ./script.sh
+2024-10-01 07:44:02 - Starting system hardening process...
+2024-10-01 07:44:02 - Detected Debian/Ubuntu.
+2024-10-01 07:44:02 - Installing security packages (UFW, Fail2Ban, chkrootkit)...
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 https://pkgs.zabbly.com/incus/stable jammy InRelease                                                   
+Hit:3 https://pkgs.zabbly.com/kernel/stable jammy InRelease                                                  
+Hit:4 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2024-10-01 07:44:02 - System packages updated.
+2024-10-01 07:44:02 - Installing necessary packages...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+chkrootkit is already the newest version (0.55-4).
+fail2ban is already the newest version (0.11.2-6).
+ufw is already the newest version (0.36.1-4ubuntu0.1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2024-10-01 07:44:02 - Necessary packages installed.
+2024-10-01 07:44:02 - Setting up firewall rules...
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Firewall is active and enabled on system startup
+2024-10-01 07:44:02 - UFW firewall rules configured.
+2024-10-01 07:44:02 - Disabling root login via SSH...
+2024-10-01 07:44:02 - SSH configuration file not found.
+2024-10-01 07:44:02 - Disabling unused services...
+Failed to disable unit: Unit file telnet.socket does not exist.
+Failed to disable unit: Unit file rlogin.socket does not exist.
+Failed to stop telnet.socket: Unit telnet.socket not loaded.
+Failed to stop rlogin.socket: Unit rlogin.socket not loaded.
+2024-10-01 07:44:02 - Unused services disabled.
+2024-10-01 07:44:02 - Enforcing strong password policies...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libcrack2 libpwquality-common libpwquality1
+Recommended packages:
+  cracklib-runtime
+The following NEW packages will be installed:
+  libcrack2 libpam-pwquality libpwquality-common libpwquality1
+0 upgraded, 4 newly installed, 0 to remove and 0 not upgraded.
+Need to get 62.4 kB of archives.
+After this operation, 316 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcrack2 amd64 2.9.6-3.4build4 [29.6 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpwquality-common all 1.4.4-1build2 [7642 B]
+Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpwquality1 amd64 1.4.4-1build2 [13.4 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy/main amd64 libpam-pwquality amd64 1.4.4-1build2 [11.8 kB]
+Fetched 62.4 kB in 0s (464 kB/s)           
+Selecting previously unselected package libcrack2:amd64.
+(Reading database ... 53417 files and directories currently installed.)
+Preparing to unpack .../libcrack2_2.9.6-3.4build4_amd64.deb ...
+Unpacking libcrack2:amd64 (2.9.6-3.4build4) ...
+Selecting previously unselected package libpwquality-common.
+Preparing to unpack .../libpwquality-common_1.4.4-1build2_all.deb ...
+Unpacking libpwquality-common (1.4.4-1build2) ...
+Selecting previously unselected package libpwquality1:amd64.
+Preparing to unpack .../libpwquality1_1.4.4-1build2_amd64.deb ...
+Unpacking libpwquality1:amd64 (1.4.4-1build2) ...
+Selecting previously unselected package libpam-pwquality:amd64.
+Preparing to unpack .../libpam-pwquality_1.4.4-1build2_amd64.deb ...
+Unpacking libpam-pwquality:amd64 (1.4.4-1build2) ...
+Setting up libpwquality-common (1.4.4-1build2) ...
+Setting up libcrack2:amd64 (2.9.6-3.4build4) ...
+Setting up libpwquality1:amd64 (1.4.4-1build2) ...
+Setting up libpam-pwquality:amd64 (1.4.4-1build2) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.8) ...
+2024-10-01 07:44:02 - Password policies enforced.
+2024-10-01 07:44:02 - Configuring Fail2Ban for SSH protection...
+[DEFAULT]
+bantime = 3600
+findtime = 600
+maxretry = 5
+
+[sshd]
+enabled = true
+2024-10-01 07:44:02 - Fail2Ban configured and restarted.
+2024-10-01 07:44:02 - Installing and configuring auditd...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libauparse0
+The following NEW packages will be installed:
+  audispd-plugins auditd libauparse0
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 309 kB of archives.
+After this operation, 1013 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 libauparse0 amd64 1:3.0.7-1build1 [58.0 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 auditd amd64 1:3.0.7-1build1 [212 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy/universe amd64 audispd-plugins amd64 1:3.0.7-1build1 [39.1 kB]
+Fetched 309 kB in 0s (1759 kB/s)          
+Selecting previously unselected package libauparse0:amd64.
+(Reading database ... 53443 files and directories currently installed.)
+Preparing to unpack .../libauparse0_1%3a3.0.7-1build1_amd64.deb ...
+Unpacking libauparse0:amd64 (1:3.0.7-1build1) ...
+Selecting previously unselected package auditd.
+Preparing to unpack .../auditd_1%3a3.0.7-1build1_amd64.deb ...
+Unpacking auditd (1:3.0.7-1build1) ...
+Selecting previously unselected package audispd-plugins.
+Preparing to unpack .../audispd-plugins_1%3a3.0.7-1build1_amd64.deb ...
+Unpacking audispd-plugins (1:3.0.7-1build1) ...
+Setting up libauparse0:amd64 (1:3.0.7-1build1) ...
+Setting up auditd (1:3.0.7-1build1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/auditd.service → /lib/systemd/system/auditd.service.
+Setting up audispd-plugins (1:3.0.7-1build1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.8) ...
+Synchronizing state of auditd.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable auditd
+2024-10-01 07:44:02 - auditd installed and enabled.
+2024-10-01 07:44:02 - Running rootkit scan with chkrootkit...
+ROOTDIR is `/'
+Checking `amd'...                                           not found
+Checking `basename'...                                      not infected
+Checking `biff'...                                          not found
+Checking `chfn'...                                          not infected
+Checking `chsh'...                                          not infected
+Checking `cron'...                                          not found
+Checking `crontab'...                                       not found
+Checking `date'...                                          not infected
+Checking `du'...                                            not infected
+Checking `dirname'...                                       not infected
+Checking `echo'...                                          not infected
+Checking `egrep'...                                         not infected
+Checking `env'...                                           not infected
+Checking `find'...                                          not infected
+Checking `fingerd'...                                       not found
+Checking `gpm'...                                           not found
+Checking `grep'...                                          not infected
+Checking `hdparm'...                                        not found
+Checking `su'...                                            not infected
+Checking `ifconfig'...                                      not found
+Checking `inetd'...                                         not tested
+Checking `inetdconf'...                                     not found
+Checking `identd'...                                        not found
+Checking `init'...                                          not infected
+Checking `killall'...                                       not found
+Checking `ldsopreload'...                                   not infected
+Checking `login'...                                         not infected
+Checking `ls'...                                            not infected
+Checking `lsof'...                                          not found
+Checking `mail'...                                          not found
+Checking `mingetty'...                                      not found
+Checking `netstat'...                                       not found
+not found
+Checking `named'...                                         not found
+Checking `passwd'...                                        not infected
+Checking `pidof'...                                         not infected
+Checking `pop2'...                                          not found
+Checking `pop3'...                                          not found
+Checking `ps'...                                            not infected
+Checking `pstree'...                                        not found
+Checking `rpcinfo'...                                       not found
+Checking `rlogind'...                                       not found
+Checking `rshd'...                                          not found
+Checking `slogin'...                                        not infected
+Checking `sendmail'...                                      not found
+Checking `sshd'...                                          not found
+Checking `syslogd'...                                       not tested
+Checking `tar'...                                           not infected
+Checking `tcpd'...                                          not found
+Checking `tcpdump'...                                       not infected
+Checking `top'...                                           not infected
+Checking `telnetd'...                                       not found
+Checking `timed'...                                         not found
+Checking `traceroute'...                                    not found
+Checking `vdir'...                                          not infected
+Checking `w'...                                             not infected
+Checking `write'...                                         not found
+not found
+Checking `aliens'...                                        no suspect files
+Searching for sniffer's logs, it may take a while...        nothing found
+Searching for rootkit HiDrootkit's default files...         nothing found
+Searching for rootkit t0rn's default files...               nothing found
+Searching for t0rn's v8 defaults...                         nothing found
+Searching for rootkit Lion's default files...               nothing found
+Searching for rootkit RSHA's default files...               nothing found
+Searching for rootkit RH-Sharpe's default files...          nothing found
+Searching for Ambient's rootkit (ark) default files and dirs... nothing found
+Searching for suspicious files and dirs, it may take a while... The following suspicious files and directories were found:
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/basic/authz_owner/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/basic/authz_owner/.htpasswd
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/basic/file/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/basic/file/.htpasswd
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_wrongrelm/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_wrongrelm/.htpasswd
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest/.htpasswd
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_time/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_time/.htpasswd
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/noentry/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_anon/.htaccess
+/usr/lib/python3/dist-packages/fail2ban/tests/files/config/apache-auth/digest_anon/.htpasswd
+
+Searching for LPD Worm files and dirs...                    nothing found
+Searching for Ramen Worm files and dirs...                  nothing found
+Searching for Maniac files and dirs...                      nothing found
+Searching for RK17 files and dirs...                        nothing found
+Searching for Ducoci rootkit...                             nothing found
+Searching for Adore Worm...                                 nothing found
+Searching for ShitC Worm...                                 nothing found
+Searching for Omega Worm...                                 nothing found
+Searching for Sadmind/IIS Worm...                           nothing found
+Searching for MonKit...                                     nothing found
+Searching for Showtee...                                    nothing found
+Searching for OpticKit...                                   nothing found
+Searching for T.R.K...                                      nothing found
+Searching for Mithra...                                     nothing found
+Searching for OBSD rk v1...                                 nothing found
+Searching for LOC rootkit...                                nothing found
+Searching for Romanian rootkit...                           nothing found
+Searching for HKRK rootkit...                               nothing found
+Searching for Suckit rootkit...                             nothing found
+Searching for Volc rootkit...                               nothing found
+Searching for Gold2 rootkit...                              nothing found
+Searching for TC2 Worm default files and dirs...            nothing found
+Searching for Anonoying rootkit default files and dirs...   nothing found
+Searching for ZK rootkit default files and dirs...          nothing found
+Searching for ShKit rootkit default files and dirs...       nothing found
+Searching for AjaKit rootkit default files and dirs...      nothing found
+Searching for zaRwT rootkit default files and dirs...       nothing found
+Searching for Madalin rootkit default files...              nothing found
+Searching for Fu rootkit default files...                   nothing found
+Searching for ESRK rootkit default files...                 nothing found
+Searching for rootedoor...                                  nothing found
+Searching for ENYELKM rootkit default files...              nothing found
+Searching for common ssh-scanners default files...          nothing found
+Searching for Linux/Ebury - Operation Windigo ssh...        nothing found
+Searching for 64-bit Linux Rootkit ...                      nothing found
+Searching for 64-bit Linux Rootkit modules...               nothing found
+Searching for Mumblehard Linux ...                          nothing found
+Searching for Backdoor.Linux.Mokes.a ...                    nothing found
+Searching for Malicious TinyDNS ...                         nothing found
+Searching for Linux.Xor.DDoS ...                            nothing found
+Searching for Linux.Proxy.1.0 ...                           nothing found
+Searching for CrossRAT ...                                  nothing found
+Searching for Hidden Cobra ...                              nothing found
+Searching for Rocke Miner ...                               nothing found
+Searching for PWNLNX4 lkm...                                nothing found
+Searching for PWNLNX6 lkm...                                nothing found
+Searching for Umbreon lrk...                                nothing found
+Searching for Kinsing.a backdoor...                         nothing found
+Searching for RotaJakiro backdoor...                        nothing found
+Searching for suspect PHP files...                          nothing found
+Searching for anomalies in shell history files...           nothing found
+Checking `asp'...                                           not infected
+Checking `bindshell'...                                     not infected
+Checking `lkm'...                                           chkproc: nothing detected
+chkdirs: nothing detected
+Checking `rexedcs'...                                       not found
+Checking `sniffer'...                                       Output from ifpromisc:
+lo: not promisc and no packet sniffer sockets
+enp5s0: PACKET SNIFFER(/usr/lib/systemd/systemd-networkd[259])
+incusbr0: not promisc and no packet sniffer sockets
+Checking `w55808'...                                        not infected
+Checking `wted'...                                          chkwtmp: nothing deleted
+Checking `scalper'...                                       not infected
+Checking `slapper'...                                       not infected
+Checking `z2'...                                            chklastlog: nothing deleted
+Checking `chkutmp'...                                       The tty of the following process(es) was not found in /var/run/utmp:
+! RUID          PID TTY    CMD
+! root          663 pts/0  sudo --login --user ubuntu bash -i
+chkutmp: nothing deleted
+Checking `OSX_RSPLUG'...                                    not tested
+2024-10-01 07:44:02 - Rootkit scan complete.
+2024-10-01 07:44:02 - Setting file permissions for sensitive files...
+2024-10-01 07:44:02 - File permissions set.
+2024-10-01 07:44:02 - Enabling automatic security updates...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  python3-distro-info
+Suggested packages:
+  bsd-mailx default-mta | mail-transport-agent needrestart powermgmt-base
+The following NEW packages will be installed:
+  python3-distro-info unattended-upgrades
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+Need to get 56.0 kB of archives.
+After this operation, 482 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-distro-info all 1.1ubuntu0.2 [6554 B]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 unattended-upgrades all 2.8ubuntu1 [49.4 kB]
+Fetched 56.0 kB in 0s (136 kB/s)              
+Preconfiguring packages ...
+Selecting previously unselected package python3-distro-info.
+(Reading database ... 53546 files and directories currently installed.)
+Preparing to unpack .../python3-distro-info_1.1ubuntu0.2_all.deb ...
+Unpacking python3-distro-info (1.1ubuntu0.2) ...
+Selecting previously unselected package unattended-upgrades.
+Preparing to unpack .../unattended-upgrades_2.8ubuntu1_all.deb ...
+Unpacking unattended-upgrades (2.8ubuntu1) ...
+Setting up python3-distro-info (1.1ubuntu0.2) ...
+Setting up unattended-upgrades (2.8ubuntu1) ...
+
+Creating config file /etc/apt/apt.conf.d/20auto-upgrades with new version
+
+Creating config file /etc/apt/apt.conf.d/50unattended-upgrades with new version
+Created symlink /etc/systemd/system/multi-user.target.wants/unattended-upgrades.service → /lib/systemd/system/unattended-upgrades.service.
+Synchronizing state of unattended-upgrades.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable unattended-upgrades
+2024-10-01 07:44:02 - Automatic security updates enabled.
+2024-10-01 07:44:02 - Removing unnecessary packages...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2024-10-01 07:44:02 - Unnecessary packages removed.
+2024-10-01 07:44:02 - Checking open ports and active services...
+sudo: netstat: command not found
+  UNIT                                 LOAD   ACTIVE SUB     DESCRIPTION
+  apparmor.service                     loaded active exited  Load AppArmor profiles
+  auditd.service                       loaded active running Security Auditing Service
+  console-setup.service                loaded active exited  Set console font and keymap
+  dbus.service                         loaded active running D-Bus System Message Bus
+  getty@tty1.service                   loaded active running Getty on tty1
+  incus-agent.service                  loaded active running Incus - agent
+  incus-lxcfs.service                  loaded active running Incus - LXCFS daemon
+  incus-startup.service                loaded active exited  Incus - Startup check
+  incus.service                        loaded active running Incus - Daemon
+  keyboard-setup.service               loaded active exited  Set the console keyboard layout
+  kmod-static-nodes.service            loaded active exited  Create List of Static Device Nodes
+  serial-getty@ttyS0.service           loaded active running Serial Getty on ttyS0
+  setvtrgb.service                     loaded active exited  Set console scheme
+  systemd-binfmt.service               loaded active exited  Set Up Additional Binary Formats
+  systemd-journal-flush.service        loaded active exited  Flush Journal to Persistent Storage
+  systemd-journald.service             loaded active running Journal Service
+  systemd-logind.service               loaded active running User Login Management
+  systemd-modules-load.service         loaded active exited  Load Kernel Modules
+  systemd-network-generator.service    loaded active exited  Generate network units from Kernel command line
+  systemd-networkd-wait-online.service loaded active exited  Wait for Network to be Configured
+  systemd-networkd.service             loaded active running Network Configuration
+  systemd-random-seed.service          loaded active exited  Load/Save Random Seed
+  systemd-remount-fs.service           loaded active exited  Remount Root and Kernel File Systems
+  systemd-resolved.service             loaded active running Network Name Resolution
+  systemd-sysctl.service               loaded active exited  Apply Kernel Variables
+  systemd-sysusers.service             loaded active exited  Create System Users
+  systemd-timesyncd.service            loaded active running Network Time Synchronization
+  systemd-tmpfiles-setup-dev.service   loaded active exited  Create Static Device Nodes in /dev
+  systemd-tmpfiles-setup.service       loaded active exited  Create Volatile Files and Directories
+  systemd-udev-settle.service          loaded active exited  Wait for udev To Complete Device Initialization
+  systemd-udev-trigger.service         loaded active exited  Coldplug All udev Devices
+  systemd-udevd.service                loaded active running Rule-based Manager for Device Events and Files
+  systemd-update-utmp.service          loaded active exited  Record System Boot/Shutdown in UTMP
+  systemd-user-sessions.service        loaded active exited  Permit User Sessions
+  unattended-upgrades.service          loaded active running Unattended Upgrades Shutdown
+  user-runtime-dir@1000.service        loaded active exited  User Runtime Directory /run/user/1000
+  user@1000.service                    loaded active running User Manager for UID 1000
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+37 loaded units listed.
+2024-10-01 07:44:02 - Open ports and active services logged.
+2024-10-01 07:44:02 - System hardening completed.
