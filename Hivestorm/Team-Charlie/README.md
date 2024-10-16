@@ -2,6 +2,8 @@
 
 # Hivestorm CTF Checklist - Charlie Team
 
+Epiphany is upon you. Your pilgrimage has begun. Enlightenment awaits.
+
 ## Pre-checklist
 
 1. Install VMWare Workstation Pro
@@ -16,87 +18,26 @@
    - Rocky Linux Package Manager - DNF
    - Linux Mint Package Manager - apt
 
-   ```bash
-   # Debian/Ubuntu-based systems
-   sudo apt update && sudo apt upgrade -y
+   See [Update System and Application Packages (Linux)](#update-system-and-application-packages-linux)
 
-   # Fedora-based systems (DNF)
-   sudo dnf update -y
+   See [Update system applications (Windows)](#update-system-applications-windows)
 
-   # Fedora alternative (YUM)
-   sudo yum update -y
+1. Update Firmware and Security Patches
 
-   # Arch-based systems
-   sudo pacman -Syu --noconfirm
-
-   # openSUSE-based systems
-   sudo zypper refresh && sudo zypper update -y
-
-   # Updating Snap packages
-   sudo snap refresh
-
-   # Updating Flatpak packages
-   flatpak update
-   ```
-
-1. Firmware and Unattended Upgrades
-
-   ```bash
-     # Unattended-upgrades for Automatic Updates (Ubuntu-based)
-     # Install unattended-upgrades package
-     sudo apt install unattended-upgrades
-
-     # Configure unattended-upgrades
-     sudo dpkg-reconfigure unattended-upgrades
-
-     # Updating Firmware (using fwupd)
-     sudo fwupdmgr update
-   ```
-
-1. Install and configure hardening tools
-
-   ```bash
-   # Install Fail2Ban to protect against brute force attacks
-   sudo apt install fail2ban -y         # For Debian/Ubuntu
-   sudo dnf install fail2ban -y         # For Fedora/RHEL
-   sudo pacman -S fail2ban --noconfirm  # For Arch-based
-
-   # Enable and start Fail2Ban service
-   sudo systemctl enable fail2ban
-   sudo systemctl start fail2ban
+   See [Update System and Application Packages (Linux)](#update-system-and-application-packages-linux) (Step 2)
 
 
-   # Disable Telnet
-   # Disable and remove telnet service (if installed)
-   sudo systemctl disable telnet.socket
-   sudo systemctl stop telnet.socket
-   sudo apt remove telnet -y            # For Debian/Ubuntu
-   sudo dnf remove telnet -y            # For Fedora/RHEL
-   sudo pacman -R telnet --noconfirm    # For Arch-based
+   See [System and Security Patches (Windows)](#system-and-security-patches-windows)
 
+1. System Hardening
 
-   # Install and run chkrootkit to check for rootkits
-   # Install chkrootkit
-   sudo apt install chkrootkit -y                  # For Debian/Ubuntu
-   sudo dnf install chkrootkit -y                  # For Fedora/RHEL
-   sudo pacman -S chkrootkit --noconfirm           # For Arch-based
+   See [Install and Configure Hardening Tools (Linux)](#install-and-configure-hardening-tools-linux)
 
-   # Run chkrootkit
-   sudo chkrootkit
-   ```
+1. Configure Remote Access Protocols
 
-1. Disable Root login over SSH
+   See [Install and Configure SSH (Linux)](#install-and-configure-ssh-linux)
 
-   ```bash
-   # Open SSH configuration file
-   sudo nano /etc/ssh/sshd_config
-
-   # Find and change the line:
-   PermitRootLogin no
-
-   # Restart SSH service to apply changes
-   sudo systemctl restart sshd
-   ```
+   See [Install and Configure RDP (Windows)](#install-and-configure-rdp-windows)
 
 1. Security policies
    - Account password policies (i.e., password complexity, password length, password history, ...)
@@ -109,10 +50,162 @@
 1. User account passwords
    - Reset account passwords unless otherwise advised
 
-## IDK other notes that might be important
+## Linux System Checklist
+
+### Update System and Application Packages (Linux)
+
+   Debian/apt-based systems:
+   ```bash
+   # Update and install packages
+   sudo apt update && sudo apt upgrade -y
+
+   # Install unattended-upgrades
+   sudo apt install unattended-upgrades
+
+   # Update Firmware using fwupd
+   sudo fwupdmgr update
+   ```
+
+   Red Hat Enterprise Linux (RHEL) based systems:
+   ```bash
+   # DNF update and install packages
+   sudo dnf update -y
+
+   # YUM update and install packages
+   sudo yum update -y
+   ```
+
+   Universal Package Managers (Snap & Flatpak):
+   ```bash
+   # Update snap packages
+   sudo snap refresh
+
+   # Update flatpak packages
+   flatpak update
+   ```
+
+### Install and Configure Hardening Tools (Linux)
+
+   Install and Configure fail2ban:
+   ```bash
+   # Install Fail2Ban
+   sudo apt install fail2ban -y         # For Debian/Ubuntu
+   sudo dnf install fail2ban -y         # For Fedora/RHEL
+   sudo pacman -S fail2ban --noconfirm  # For Arch-based
+
+   # Enable and start Fail2Ban service
+   sudo systemctl enable fail2ban
+   sudo systemctl start fail2ban
+   ```
+
+   Disable Telnet:
+   ```bash
+   # Disable Telnet
+   # Disable and remove telnet service (if installed)
+   sudo systemctl disable telnet.socket
+   sudo systemctl stop telnet.socket
+   sudo apt remove telnet -y            # For Debian/Ubuntu
+   sudo dnf remove telnet -y            # For Fedora/RHEL
+   sudo pacman -R telnet --noconfirm    # For Arch-based
+   ```
+
+   Install and run chkrootkit:
+   ```bash
+   # Install chkrootkit
+   sudo apt install chkrootkit -y                  # For Debian/Ubuntu
+   sudo dnf install chkrootkit -y                  # For Fedora/RHEL
+   sudo pacman -S chkrootkit --noconfirm           # For Arch-based
+
+   # Run chkrootkit
+   sudo chkrootkit
+   ```
+
+### Password Security (Linux)
+
+   1. Open and edit pam password configuration:
+      ```bash
+      sudo nano /etc/pam.d/common-password
+      ```
+   1. Locate pam_unix.so
+      ```bash
+      minlen=10
+      ```
+
+### Install and Configure SSH (Linux)
+   
+   1. Install OpenSSH (skip if already installed):
+      ```bash
+      sudo apt install openssh-server
+      ```
+   1. Open SSH configuration file
+      ```bash
+      sudo nano /etc/ssh/sshd_config
+      ```
+   1. Find and modify the following lines:
+      ```bash
+      PermitRootLogin no
+      PermitEmptyPasswords no
+      ```
+   1. Restart SSH service to apply changes
+      ```bash
+      sudo systemctl reload sshd
+      ```
+
+## Windows System Checklist
+
+### System and Security Patches (Windows)
+   Open PowerShell with Administrator privileges
+
+   ```powershell
+   # Install and import the Windows update module
+   Install-Module PSWindowsUpdate
+   Import-Module PSWindowsUpdate
+
+   # Check and install available updates
+   Get-WindowsUpdate
+   Install-WindowsUpdate -AcceptAll
+   ```
+
+### Update system applications (Windows)
+   Open PowerShell with Administrator privileges
+
+   ```powershell
+   # Source update / troubleshoot
+   winget source update
+
+   # Update all packages
+   winget upgrade --all --accept-package-agreements --accept-source-agreements
+   ```
+
+### Install and Configure RDP (Windows)
+   Open PowerShell with Administrator privileges
+
+   ```powershell
+   # Source update / troubleshoot
+   winget source update
+
+   # Update all packages
+   winget upgrade --all --accept-package-agreements --accept-source-agreements
+   ```
+
+## Tips
+
+### General
 
 - Find CNAME
   > nslookup -q=cname domain.com
+
+### Linux
+- Scan file system for a file:
+   ```bash
+   sudo find / -name "filename"
+
+   sudo locate "*.fileextension""
+   ```
+
+### Windows
+- CTT Ultimate Windows Utility
+   > iwr -useb https://christitus.com/win | iex
 
 ## Additional Notes
 
