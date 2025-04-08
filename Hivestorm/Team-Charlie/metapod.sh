@@ -1,32 +1,44 @@
 #!/bin/bash
 
+##
+# Get Options
+##
+
+
+
 ####################################################################################################
 #                                         Define variables                                         #
 ####################################################################################################
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"  # Get the directory of the script
 LOG_DIR="$SCRIPT_DIR/Metapod-Logs"           # Define the log directory
 mkdir -p "$LOG_DIR"                           # Create the log directory if it doesn't exist
-SYSLOG_FILE="$LOG_DIR/metapod.log"      # Log file path
-TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+SYSLOG_FILE="$LOG_DIR/metapod-$(date '+%Y-%m-%d %H:%M:%S').log"      # Log file path
+
+# Global variables for later use
+PM=
 
 
 ####################################################################################################
 #                                           Log function                                           #
 ####################################################################################################
 log_message() {
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
     echo -e "\e[1;34m[INFO] $TIMESTAMP - $1\e[0m" | tee -a "$SYSLOG_FILE"
 }
 
 log_success() {
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
     echo -e "\e[1;32m[SUCCESS] $TIMESTAMP - $1\e[0m" | tee -a "$SYSLOG_FILE"
 }
 
 log_warning() {
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
     echo -e "\e[1;33m[WARNING] $TIMESTAMP - $1\e[0m" | tee -a "$SYSLOG_FILE"
     WARNINGS+=("$1")
 }
 
 log_error() {
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
     echo -e "\e[1;31m[ERROR] $TIMESTAMP - $1\e[0m" | tee -a "$SYSLOG_FILE"
 }
 
@@ -34,11 +46,8 @@ separator=$(printf '%*s' "$(tput cols)" '' | tr ' ' '=')
 
 WARNINGS=()
 
-echo "$separator"
-log_message "Starting system hardening process..."
 
-
-echo "$separator"
+pm_detect() {
 ####################################################################################################
 #                                    Detect the package manager                                    #
 ####################################################################################################
@@ -64,13 +73,14 @@ else
     log_error "Unsupported distribution."
     exit 1
 fi
+}
 
 
-echo "$separator"
+pm_update() {
 ####################################################################################################
 #                           Update the system and install security tools                           #
 ####################################################################################################
-log_message "Installing security packages (UFW, Fail2Ban, chkrootkit)..."
+log_message "Updating package indexes..."
 case $PM in
     apt-get)
         sudo apt-get update -y && sudo apt-get upgrade -y
@@ -93,9 +103,11 @@ case $PM in
         ;;
 esac
 log_success "System packages updated."
+sudo -k
+}
 
 
-echo "$separator"
+pm_install() {
 ####################################################################################################
 #                      Install necessary packages (UFW, Fail2Ban, Chkrootkit)                      #
 ####################################################################################################
@@ -121,9 +133,11 @@ case $PM in
         ;;
 esac
 log_success "Necessary packages installed."
+sudo -k
+}
 
 
-echo "$separator"
+set_fw() {
 ####################################################################################################
 #                        Set up basic firewall rules using UFW or Firewalld                        #
 ####################################################################################################
@@ -142,9 +156,11 @@ elif [[ $PM == "dnf" || $PM == "yum" || $PM == "zypper" ]]; then
     sudo firewall-cmd --reload
     log_success "Firewalld configured."
 fi
+sudo -k
+}
 
 
-echo "$separator"
+disable_root_ssh() {
 ####################################################################################################
 #                                    Disable root login via SSH                                    #
 ####################################################################################################
@@ -156,9 +172,11 @@ if [[ -f /etc/ssh/sshd_config ]]; then
 else
     log_warning "SSH configuration file not found."
 fi
+sudo -k
+}
 
 
-echo "$separator"
+check_users() {
 ####################################################################################################
 #                               Checking user accounts on the system                               #
 ####################################################################################################
@@ -201,9 +219,11 @@ echo -e "\e[1;34m[USER ACCOUNTS]\e[0m"
 echo -e "  - Total users: $TOTAL_USERS"
 echo -e "  - List of all users:"
 echo -e "$USER_LIST"
+sudo -k
+}
 
 
-echo "$separator"
+disable_services() {
 ####################################################################################################
 #                          Disable unused services (e.g., telnet, rlogin)                          #
 ####################################################################################################
@@ -220,9 +240,11 @@ elif [[ $PM == "dnf" || $PM == "yum" ]]; then
     sudo systemctl stop rsh.socket
 fi
 log_success "Unused services disabled."
+sudo -k
+}
 
 
-echo "$separator"
+assign_pp() {
 ####################################################################################################
 #                                     Assign password policies                                     #
 ####################################################################################################
@@ -254,9 +276,11 @@ case $PM in
         ;;
 esac
 log_success "Password policies enforced."
+sudo -k
+}
 
 
-echo "$separator"
+config_f2b() {
 ####################################################################################################
 #                                        Configure Fail2Ban                                        #
 ####################################################################################################
@@ -272,9 +296,11 @@ enabled = true
 EOL
 sudo systemctl restart fail2ban
 log_success "Fail2Ban configured and restarted."
+sudo -k
+}
 
 
-echo "$separator"
+install_audit() {
 ####################################################################################################
 #                      Install and configure auditd for logging system events                      #
 ####################################################################################################
@@ -299,9 +325,11 @@ esac
 sudo systemctl enable auditd
 sudo systemctl start auditd
 log_success "auditd installed and enabled."
+sudo -k
+}
 
 
-echo "$separator"
+rootkit_scan() {
 ####################################################################################################
 #                                 Run rootkit scan with chkrootkit                                 #
 ####################################################################################################
@@ -317,18 +345,22 @@ if command -v chkrootkit &>/dev/null; then
 else
     log_warning "chkrootkit is not installed or could not run."
 fi
+sudo -k
+}
 
 
-echo "$separator"
+set_perms() {
 ####################################################################################################
 #                               Set permissions for key system files                               #
 ####################################################################################################
 log_message "Setting file permissions for sensitive files..."
 sudo chmod 644 /etc/ssh/sshd_config /etc/passwd /etc/shadow /var/log/auth.log 2>/dev/null
 log_success "File permissions set."
+sudo -k
+}
 
 
-echo "$separator"
+unattended_upgrades() {
 ####################################################################################################
 #                                   Enable auto security updates                                   #
 ####################################################################################################
@@ -355,9 +387,11 @@ case $PM in
         ;;
 esac
 log_success "Automatic security updates enabled."
+sudo -k
+}
 
 
-echo "$separator"
+pm_autoremove() {
 ####################################################################################################
 #                                     Clean up unused packages                                     #
 ####################################################################################################
@@ -380,9 +414,11 @@ case $PM in
         ;;
 esac
 log_success "Unnecessary packages removed."
+sudo -k
+}
 
 
-echo "$separator"
+log_net() {
 ####################################################################################################
 #                                Log open ports and active services                                #
 ####################################################################################################
@@ -399,6 +435,8 @@ else
 fi
 
 log_success "Open ports and active services logged."
+sudo -k
+}
 
 
 ####################################################################################################
@@ -462,4 +500,55 @@ display_summary() {
     echo -e "\e[1;36m==========================\e[0m\n"
 }
 
+usage() {
+    echo "Usage: $0 [flags]"
+    echo "  -d  Detect package manager (required for some operations)"
+    echo "  -u  Update PM indexes"
+    echo "  -c  Clean unused packages"
+    echo "  -i  Install packages UFW, Fail2Ban, and Chkrootkit"
+    echo "  -2  Configure Fail2Ban"
+    echo "  -f  Setup firewall"
+    echo "  -s  Disable root SSH"
+    echo "  -r  Check the user accounts on the system"
+    echo "  -w  Disable services such as telnet and rlogin"
+    echo "  -p  Assign standard password policies"
+    echo "  -a  Install and enable auditd"
+    echo "  -k  rootkit scan with chkrootkit"
+    echo "  -n  Log network stats and services"
+    echo "  -P  Set permissions for system files (passwd, etc.)"
+    echo "  -U  Enable unattended upgrades"
+    echo
+    echo "A complete summary will always be printed after all actions run"
+    exit 1
+}
+
+if [ $# -eq 0 ]; then
+    usage
+fi
+
+sudo -k
+
+# Parse the flags
+while getopts "duci2fsrwpaknPU" flag; do
+    case "${flag}" in
+        d) pm_detect ;;
+        u) pm_update ;;
+        c) pm_autoremove ;;
+        i) pm_install ;;
+        2) config_f2b ;;
+        f) set_fw ;;
+        s) disable_root_ssh ;;
+        r) check_users ;;
+        w) disable_services ;;
+        p) assign_pp ;;
+        a) install_audit ;;
+        k) rootkit_scan ;;
+        n) log_net ;;
+        P) set_perms ;;
+        U) unattended_upgrades ;;
+        *) usage ;;
+    esac
+done
+
 display_summary
+
